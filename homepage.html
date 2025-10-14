@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<style>
+        /* General Style */
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #e9f6ff; /* light sky background */
+            color: #1a1a1a;
+            scroll-behavior: smooth;
+        }
+
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 15px 60px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-weight: bold;
+            color: #0095ff; /* sky blue logo */
+            font-size: 1.4rem;
+        }
+
+        .nav-links a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s, transform 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #007acc;
+            transform: scale(1.05);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(to bottom right, #a9dcff, #e9f6ff);
+            text-align: center;
+            padding: 120px 20px;
+            border-bottom: 2px solid #bfe3ff;
+        }
+
+        .hero h1 {
+            font-size: 2.7rem;
+            color: #006bb3;
+        }
+
+        .hero p {
+            margin: 20px auto;
+            font-size: 1.1rem;
+            color: #333;
+            max-width: 600px;
+        }
+
+        .btn {
+            background-color: #00aaff;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #008ed6;
+            transform: scale(1.05);
+        }
+
+        /* Sections */
+        section {
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        #about, #contact {
+            background-color: #f0faff;
+        }
+
+        h2 {
+            color: #007acc;
+            margin-bottom: 20px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #d6f0ff;
+            color: #333;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">Clinical Note Analysis System</div>
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="{{ url_for('login') }}">Login</a>
+            <a href="{{ url_for('signup') }}">Signup</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </nav>
+
+    <section id="home" class="hero">
+        <h1>Transform Clinical Notes into Actionable Insights</h1>
+        <p>Analyze, summarize, and extract key medical information using advanced NLP technology.</p>
+        <a href="{{ url_for('login') }}" class="btn">Get Started</a>
+    </section>
+
+    <section id="about">
+        <h2>About our clinic</h2>
+        <p>Our clinic is an intelligent system designed to help healthcare professionals efficiently process clinical notes. 
+        It leverages Natural Language Processing to summarize and highlight key insights for better patient outcomes.</p>
+    </section>
+
+    <section id="contact">
+        <h2>Contact Us</h2>
+        <p>Email: support@clinic.com</p>
+        <p>Phone: +20 123 456 7890</p>
+        <p>Address: Cairo, Egypt</p>
+    </section>
+
+    <footer>
+        © 2025 CNAS. All Rights Reserved.
+    </footer>
+
+</body>
+</html>
