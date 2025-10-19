@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Doctor Dashboard{% endblock %}
+{% block content %}
+<div class="doctor-dashboard">
+
+  <h2 class="dashboard-title">👨‍⚕️ Doctor & Nurse Dashboard</h2>
+  <p class="welcome-msg">Welcome, <strong>{{ username }}</strong>. Manage clinical notes and access your tools below.</p>
+
+  <div class="card-grid">
+    <a href="{{ url_for('upload') }}" class="dashboard-card">
+      <div class="icon">📄</div>
+      <div class="card-content">
+        <h3>Upload Clinical Notes</h3>
+        <p>Submit new clinical notes for analysis.</p>
+      </div>
+    </a>
+
+<a href="{{ url_for('view_uploads') }}" class="dashboard-card">
+      <div class="icon">📁</div>
+      <div class="card-content">
+        <h3>View Uploaded Notes</h3>
+        <p>Access and manage previously uploaded files.</p>
+      </div>
+    </a>
+
+<a href="{{ url_for('settings') }}" class="dashboard-card">
+      <div class="icon">⚙️</div>
+      <div class="card-content">
+        <h3>Settings</h3>
+        <p>Manage your account preferences.</p>
+      </div>
+    </a>
+  </div>
+
+</div>
+{% endblock %}
+

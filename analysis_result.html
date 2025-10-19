@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Analysis Result</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f7fb;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #1976d2;
+      color: white;
+      text-align: center;
+      padding: 20px 0;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 30px 40px;
+    }
+
+    h2 {
+      color: #1976d2;
+      border-bottom: 2px solid #1976d2;
+      padding-bottom: 8px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      background: #f9fafc;
+      border-left: 5px solid #1976d2;
+      padding: 20px;
+      border-radius: 8px;
+      font-size: 17px;
+      line-height: 1.6;
+      color: #333;
+      white-space: pre-wrap;
+    }
+
+    .btn {
+      display: inline-block;
+      background-color: #1976d2;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      margin-top: 20px;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #125ea9;
+    }
+
+    footer {
+      text-align: center;
+      color: #777;
+      margin: 40px 0 10px 0;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header> AI Clinical Note Analyzer</header>
+
+  <div class="container">
+    <h2>Generated Insights</h2>
+<div class="result-box">
+  <h3>Summary:</h3>
+  <p>{{ results.summary }}</p>
+
+  <h3>Entities:</h3>
+  <ul>
+    {% for e in results.entities %}
+      <li>{{ e }}</li>
+    {% endfor %}
+  </ul>
+
+  <h3>Keywords:</h3>
+  <ul>
+    {% for k in results.keywords %}
+      <li>{{ k }}</li>
+    {% endfor %}
+  </ul>
+</div>
+
+
+    <a href="{{ url_for('doctor_dashboard') }}" class="btn">⬅ Back to Dashboard</a>
+  </div>
+
+  <footer>© 2025 Clinical Dashboard NLP Module</footer>
+</body>
+</html>

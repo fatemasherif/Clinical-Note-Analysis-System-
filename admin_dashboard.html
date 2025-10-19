@@ -1,1 +1,294 @@
-<h1>Welcome </h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | CNAS</title>
+
+  <style>
+    /* ===== Base Styles ===== */
+    body {
+      background-color: #f3f4f6;
+      font-family: system-ui, -apple-system, sans-serif;
+      margin: 0;
+      color: #1f2937;
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+    }
+
+    /* ===== Navbar ===== */
+    nav {
+      background-color: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 32px;
+    }
+
+    nav h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1d4ed8;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 24px;
+      margin: 0;
+      padding: 0;
+      color: #374151;
+    }
+
+    nav ul a {
+      text-decoration: none;
+      color: inherit;
+      transition: 0.2s;
+    }
+
+    nav ul a:hover {
+      color: #2563eb;
+    }
+
+    nav ul a.text-blue-700 {
+      font-weight: 600;
+      color: #1d4ed8;
+      border-bottom: 2px solid #2563eb;
+      padding-bottom: 4px;
+    }
+
+    nav ul a.hover\:text-red-600:hover {
+      color: #dc2626;
+    }
+
+    /* ===== Main Section ===== */
+    main {
+      padding: 40px;
+    }
+
+    main h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: #1e40af;
+      margin-bottom: 2rem;
+    }
+
+    /* ===== Cards (Stats) ===== */
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    @media (min-width: 768px) {
+      .stats {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .card {
+      background-color: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .card h3 {
+      color: #4b5563;
+    }
+
+    .card p {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: #1d4ed8;
+      margin-top: 8px;
+    }
+
+    /* ===== Table Section ===== */
+    .table-section {
+      background-color: #fff;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 2.5rem;
+    }
+
+    .table-section h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    .table-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .btn {
+      background-color: #2563eb;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn:hover {
+      background-color: #1e40af;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      background-color: #2563eb;
+      color: white;
+      text-align: left;
+      padding: 12px;
+    }
+
+    td {
+      padding: 12px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .delete-btn {
+      background: none;
+      border: none;
+      color: #dc2626;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .delete-btn:hover {
+      color: #b91c1c;
+    }
+
+    /* ===== Feedback Section ===== */
+    .feedback {
+      background-color: #fff;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      padding: 32px;
+    }
+
+    .feedback h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 16px;
+    }
+
+    .feedback ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      color: #374151;
+    }
+
+    .feedback li {
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 8px;
+      margin-bottom: 8px;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- Navbar -->
+  <nav>
+    <h1>CNAS Admin Dashboard</h1>
+    <ul>
+      <li><a href="{{ url_for('admin_dashboard') }}" class="text-blue-700">Dashboard</a></li>
+      <li><a href="{{ url_for('admin_users') }}">Manage Users</a></li>
+      <li><a href="{{ url_for('admin_notes') }}">Clinical Notes</a></li>
+      <li><a href="{{ url_for('login') }}" class="hover:text-red-600">Logout</a></li>
+    </ul>
+  </nav>
+
+
+  
+
+
+  <!-- Main -->
+  <main>
+    <h2>Welcome,{{ username }} 👩‍💻</h2>
+
+    <!-- Stats -->
+    <section class="stats">
+      <div class="card">
+        <h3>Total Users</h3>
+        <p id="totalUsers">0</p>
+      </div>
+      <div class="card">
+        <h3>Clinical Notes</h3>
+        <p id="totalNotes">0</p>
+      </div>
+      <div class="card">
+        <h3>Feedback Received</h3>
+        <p id="totalFeedback">0</p>
+      </div>
+    </section>
+
+    <!-- User Management -->
+    <section class="table-section">
+      <div class="table-header">
+        <h3>User Management</h3>
+        <a href="{{ url_for('admin_users') }}" class="btn">+ Add User</a>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>User ID</th>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Email</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="userTable">
+          {% for user in users[:3] %}   <!-- 👈 show only first 3 -->
+          <tr>
+            <td>{{ user['id'] }}</td>
+            <td>{{ user['username'] }}</td>
+            <td>{{ user['role'] }}</td>
+            <td>{{ user['email'] }}</td>
+            <td><button class="delete-btn">Delete</button></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Feedback -->
+    <section class="feedback">
+      <h3>Recent Feedback</h3>
+      <ul>
+        <li>“The NLP analysis was accurate for patient diagnosis.” — <b>Dr. Lina</b></li>
+        <li>“Need better summarization for long notes.” — <b>Dr. Omar</b></li>
+      </ul>
+    </section>
+  </main>
+
+  <!-- Dummy data-->
+  <script>
+    document.getElementById("totalUsers").textContent = 5;
+    document.getElementById("totalNotes").textContent = 12;
+    document.getElementById("totalFeedback").textContent = 2;
+  </script>
+
+</body>
+</html>

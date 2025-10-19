@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}View Uploaded Notes{% endblock %}
+
+{% block content %}
+<div class="view-uploads-container">
+  <h2 class="section-title">📁 Uploaded Clinical Notes</h2>
+
+  {% if files %}
+  <table class="uploads-table">
+    <thead>
+      <tr>
+        <th>Filename</th>
+        <th>Uploader</th>
+        <th>Role</th>
+        <th>Uploaded At</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for file in files %}
+      <tr>
+        <td>{{ file.filename }}</td>
+        <td>{{ file.uploader }}</td>
+        <td>{{ file.role }}</td>
+        <td>{{ file.uploaded_at }}</td>
+        <td>
+          <!--  Download available for everyone -->
+          <a href="{{ url_for('download_file', filename=file.filename, uploader_role=file.role) }}" 
+             class="download-btn">⬇️ Download</a>
+
+          <!--  Edit button — only for doctor and only for .txt files -->
+          {% if role == 'doctor' and file.filename.endswith('.txt') %}
+          <a href="{{ url_for('edit_file', filename=file.filename, uploader_role=file.role) }}" 
+             class="download-btn" style="background:#ff9800;">
+            ✏️ Edit
+          </a>
+          {% endif %}
+
+        {% if role == 'doctor' %}
+<form action="{{ url_for('delete_file', filename=file.filename, uploader_role=file.role) }}" 
+      method="POST" style="display:inline;">
+  <button type="submit" class="download-btn" style="background:#dc3545;">🗑️ Delete</button>
+</form>
+{% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="no-files-msg">No files uploaded yet. 📄</p>
+  {% endif %}
+</div>
+{% endblock %}
