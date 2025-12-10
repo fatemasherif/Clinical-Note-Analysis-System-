@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Clinical Note System{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo"><a href="/">Clinical Note System</a></div>
+    <ul class="nav-links">
+      <li><a class="nav-link" href="/doctor_dashboard">Dashboard</a></li>
+      <li><a class="nav-link" href="/upload">Upload</a></li>
+      <li><a class="nav-link" href="/logout">Logout</a></li>
+    </ul>
+  </nav>
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="footer">
+    <div class="footer-content">
+      <span>© 2025 Clinical Note Analysis</span>
+    </div>
+  </footer>
+</body>
+</html>
