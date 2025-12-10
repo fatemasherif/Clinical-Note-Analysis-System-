@@ -1,8 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 import sqlite3
 import os
-from werkzeug.utils import secure_filename 
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from flask import send_from_directory
 from flask import flash
 
@@ -39,6 +38,7 @@ with get_db() as conn:
 @app.route('/')
 def home():
     return (render_template('homepage.html'))
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -46,10 +46,11 @@ def login():
         password = request.form['password']
 
         conn = get_db()
-        user = conn.execute("SELECT * FROM users WHERE username=?", (username,)).fetchone()
+        user = conn.execute("SELECT * FROM users WHERE username=? AND password=?", 
+                            (username, password)).fetchone()
         conn.close()
 
-        if user and check_password_hash(user['password'], password):
+        if user:
             session['username'] = user['username']
             session['role'] = user['role']
 
@@ -61,28 +62,19 @@ def login():
                 return redirect(url_for('doctor_dashboard'))
         else:
             return render_template('login.html', error="Invalid username or password")
-
     return render_template('login.html')
-
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        username = request.form['username'].strip()
+        username = request.form['username']
         password = request.form['password']
         role = request.form['role']
-
-        # Validate role
-        if role not in ['doctor', 'nurse', 'admin']:
-            return render_template('signup.html', error="Invalid role selected!")
-
-        # Hash password before storing
-        hashed_password = generate_password_hash(password)
 
         try:
             with get_db() as conn:
                 conn.execute("INSERT INTO users (username, password, role) VALUES (?, ?, ?)",
-                             (username, hashed_password, role))
+                             (username, password, role))
             return redirect(url_for('login'))
         except sqlite3.IntegrityError:
             return render_template('signup.html', error="Username already exists!")
@@ -312,16 +304,16 @@ def settings():
     if request.method == 'POST':
         new_password = request.form.get('new_password')
         if new_password:
-            hashed_password = generate_password_hash(new_password)
             with get_db() as conn:
                 conn.execute(
                     "UPDATE users SET password=? WHERE username=?",
-                    (hashed_password, session['username'])
+                    (new_password, session['username'])
                 )
             flash('Password updated successfully ✅', 'success')
             return redirect(url_for('settings'))
 
     return render_template('settings.html', username=session['username'])
+
 
 
 

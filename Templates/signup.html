@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign Up</title>
-  <style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignUp</title>
+</head>
+<style>
     body {
       font-family: 'Segoe UI', sans-serif;
       background: linear-gradient(135deg, #e6f0ff, #ffffff);
@@ -40,20 +41,12 @@
       font-size: 16px;
     }
     button:hover { background-color: #0066ff; }
-    .error {
-      color: red;
-      text-align: center;
-      margin-top: 10px;
-    }
   </style>
 </head>
 <body>
 
   <div class="signup-container">
     <h2>Sign Up</h2>
-    {% if error %}
-      <p class="error">{{ error }}</p>
-    {% endif %}
     <form action="/signup" method="post">
       <label>Username:</label>
       <input type="text" name="username" required>
