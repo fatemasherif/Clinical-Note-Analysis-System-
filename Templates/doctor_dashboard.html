@@ -3,7 +3,13 @@
 {% block content %}
 <div class="doctor-dashboard">
 
-  <h2 class="dashboard-title">👨‍⚕️ Doctor & Nurse Dashboard</h2>
+  <h2 class="dashboard-title">
+  {% if role == 'doctor' %}
+    👨‍⚕️ Doctor Dashboard
+  {% else %}
+    👩‍⚕️ Nurse Dashboard
+  {% endif %}
+</h2>
   <p class="welcome-msg">Welcome, <strong>{{ username }}</strong>. Manage clinical notes and access your tools below.</p>
 
   <div class="card-grid">
@@ -15,7 +21,7 @@
       </div>
     </a>
 
-<a href="{{ url_for('view_uploads') }}" class="dashboard-card">
+    <a href="{{ url_for('view_uploads') }}" class="dashboard-card">
       <div class="icon">📁</div>
       <div class="card-content">
         <h3>View Uploaded Notes</h3>
@@ -23,7 +29,16 @@
       </div>
     </a>
 
-<a href="{{ url_for('settings') }}" class="dashboard-card">
+    <!-- CHANGED: Now available for BOTH doctors and nurses -->
+    <a href="{{ url_for('analyze_document') }}" class="dashboard-card">
+      <div class="icon">🧠</div>
+      <div class="card-content">
+        <h3>Analyze with AI</h3>
+        <p>Use NLP to extract insights from clinical notes.</p>
+      </div>
+    </a>
+
+    <a href="{{ url_for('settings') }}" class="dashboard-card">
       <div class="icon">⚙️</div>
       <div class="card-content">
         <h3>Settings</h3>
@@ -34,4 +49,3 @@
 
 </div>
 {% endblock %}
-
