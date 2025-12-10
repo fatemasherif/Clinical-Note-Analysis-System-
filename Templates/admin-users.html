@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manage Users | CNAS Admin</title>
+  <style>
+    body {
+      background-color: #f3f4f6;
+      font-family: system-ui, -apple-system, sans-serif;
+      margin: 0;
+      color: #1f2937;
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+    }
+    nav {
+      background-color: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 32px;
+    }
+
+    nav h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1d4ed8;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 24px;
+      margin: 0;
+      padding: 0;
+      color: #374151;
+    }
+
+    nav ul a {
+      text-decoration: none;
+      color: inherit;
+      transition: 0.2s;
+    }
+
+    nav ul a:hover {
+      color: #2563eb;
+    }
+
+    nav ul a.text-blue-700 {
+      font-weight: 600;
+      color: #1d4ed8;
+      border-bottom: 2px solid #2563eb;
+      padding-bottom: 4px;
+    }
+
+    nav ul a.hover\:text-red-600:hover {
+      color: #dc2626;
+    }
+    .main { padding: 40px; }
+    .main h2 { font-size: 28px; color: #1e40af; margin-bottom: 24px; }
+
+    .top-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      gap: 10px;
+    }
+    .top-controls input {
+      flex: 1;
+      min-width: 250px;
+      padding: 10px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      outline: none;
+    }
+    .top-controls button {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .table-section {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    table { width: 100%; border-collapse: collapse; }
+    thead { background-color: #2563eb; color: white; }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    button.link-edit {
+      color: #2563eb;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    button.link-delete {
+      color: #dc2626;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: white;
+      padding: 24px;
+      border-radius: 10px;
+      width: 350px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .modal-content input, .modal-content select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+    }
+    .buttons { display: flex; justify-content: flex-end; gap: 10px; }
+    .cancel {
+      background: #d1d5db;
+      color: black;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+    }
+    .save {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav>
+    <h1>CNAS Admin Dashboard</h1>
+    <ul>
+      <li><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
+      <li><a href="{{ url_for('admin_users') }}" class="text-blue-700">Manage Users</a></li>
+      <li><a href="{{ url_for('admin_notes') }}" >Clinical Notes</a></li>
+      <li><a href="{{ url_for('login') }}" class="hover:text-red-600">Logout</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Section -->
+  <main class="main">
+    <h2>Manage Users 👥</h2>
+    <div class="top-controls">
+      <input id="searchInput" type="text" placeholder="Search by name or role..." />
+      <button id="addUserBtn">+ Add New User</button>
+    </div>
+
+    <section class="table-section">
+      <table>
+        <thead>
+          <tr><th>ID</th><th>Username</th><th>Role</th><th>Actions</th></tr>
+        </thead>
+        <tbody id="userTable">
+          {% for user in users %}
+          <tr>
+            <td>{{ user['id'] }}</td>
+            <td>{{ user['username'] }}</td>
+            <td>{{ user['role'] }}</td>
+            <td>
+              <button class="link-edit" data-id="{{ user['id'] }}" data-username="{{ user['username'] }}" data-role="{{ user['role'] }}">Edit</button>
+              <button class="link-delete" data-id="{{ user['id'] }}">Delete</button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <!-- Modal Form -->
+  <div id="userModal" class="modal">
+    <div class="modal-content">
+      <h3 id="modalTitle">Add New User</h3>
+      <form id="userForm">
+        <input type="hidden" id="userId" />
+        <input type="text" id="userName" placeholder="Username" required />
+
+        <div id="passwordField">
+          <input type="password" id="userPassword" placeholder="Password" required />
+        </div>
+
+        <select id="userRole" required>
+          <option value="">Select Role</option>
+          <option value="Doctor">Doctor</option>
+          <option value="Staff">Staff</option>
+          <option value="Admin">Admin</option>
+        </select>
+
+        <div class="buttons">
+          <button type="button" class="cancel" id="cancelBtn">Cancel</button>
+          <button type="submit" class="save">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const modal = document.getElementById("userModal");
+    const form = document.getElementById("userForm");
+    const addBtn = document.getElementById("addUserBtn");
+    const cancelBtn = document.getElementById("cancelBtn");
+    const searchInput = document.getElementById("searchInput");
+    const userTable = document.getElementById("userTable");
+    const passwordField = document.getElementById("passwordField");
+
+    // Open Add User modal
+    addBtn.addEventListener("click", () => {
+      form.reset();
+      document.getElementById("modalTitle").innerText = "Add New User";
+      passwordField.style.display = "block";
+      modal.style.display = "flex";
+    });
+
+    
+    // Edit user modal
+    document.querySelectorAll(".link-edit").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const id = btn.dataset.id;
+        const username = btn.dataset.username;
+        const role = btn.dataset.role;
+
+        document.getElementById("userId").value = id;
+        document.getElementById("userName").value = username;
+        document.getElementById("userRole").value = role;
+
+        document.getElementById("modalTitle").innerText = "Edit User";
+        passwordField.style.display = "none";
+        modal.style.display = "flex";
+      });
+    });
+
+    // Save (Add/Edit)
+    form.addEventListener("submit", async e => {
+      e.preventDefault();
+
+      const id = document.getElementById("userId").value;
+      const username = document.getElementById("userName").value;
+      const role = document.getElementById("userRole").value;
+      const password = document.getElementById("userPassword").value;
+
+      const url = id ? `/admin/edit_user/${id}` : "/admin/add_user";
+      const payload = id ? { username, role } : { username, password, role };
+
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      alert(data.message || data.error);
+      if (res.ok) location.reload();
+    });
+
+  // Close modal
+    cancelBtn.addEventListener("click", () => {
+      modal.style.display = "none";
+    });
+
+
+    // Delete user
+    document.querySelectorAll(".link-delete").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const id = btn.dataset.id;
+        if (!confirm("Are you sure you want to delete this user?")) return;
+        const res = await fetch(`/admin/delete_user/${id}`, { method: "POST" });
+        const data = await res.json();
+        alert(data.message || data.error);
+        if (res.ok) location.reload();
+      });
+    });
+
+    // Search filter
+    searchInput.addEventListener("input", () => {
+      const filter = searchInput.value.toLowerCase();
+      for (const row of userTable.getElementsByTagName("tr")) {
+        row.style.display = row.textContent.toLowerCase().includes(filter) ? "" : "none";
+      }
+    });
+  </script>
+</body>
+</html>

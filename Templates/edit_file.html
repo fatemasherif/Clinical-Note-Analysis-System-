@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Edit {{ filename }}{% endblock %}
+
+{% block content %}
+<div class="view-uploads-container">
+  <h2 class="section-title">✏️ Edit File: {{ filename }}</h2>
+
+  <form method="POST">
+    <textarea name="edited_content" rows="15" style="width:100%;padding:10px;border-radius:8px;border:1px solid #ccc;">{{ content }}</textarea>
+    <button type="submit" class="upload-btn" style="margin-top:15px;">💾 Save Changes</button>
+  </form>
+</div>
+{% endblock %}

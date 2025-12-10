@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Forum Discussion</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f7faff;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Navbar */
+        nav {
+            background-color: #004aad;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            color: white;
+        }
+
+        .nav-left {
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .nav-right a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 500;
+        }
+
+        .nav-right a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: #004aad;
+            margin-bottom: 20px;
+        }
+
+        .discussion-box {
+            background-color: #eef6ff;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #004aad;
+            border-radius: 8px;
+        }
+
+        .discussion-box strong {
+            color: #004aad;
+        }
+
+        form {
+            margin-top: 30px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 15px;
+            resize: vertical;
+        }
+
+        button {
+            margin-top: 10px;
+            background-color: #0077cc;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #005ea6;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-left">Clinical Note System</div>
+        <div class="nav-right">
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="#about">About</a>
+            <a href="{{ url_for('login') }}">Logout</a>
+            <a href="{{ url_for('signup') }}">Signout</a>
+            <a href=="{{ url_for('Dashboard') }}">Dashboard</a>
+          
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2>Discussion Forum</h2>
+
+            <p>No posts yet. Be the first to start a discussion!</p>
+
+
+        <form method="POST" action="{{ url_for('forum') }}">
+            <label for="content"><strong>New Post:</strong></label>
+            <textarea id="content" name="content" placeholder="Write your question, suggestion, or comment..." required></textarea>
+            <button type="submit">Post</button>
+        </form>
+    </div>
+
+</body>
+</html>
