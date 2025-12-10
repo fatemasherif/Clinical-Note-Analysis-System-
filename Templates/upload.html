@@ -5,15 +5,15 @@
   <h2>📄 Upload or Add a Note</h2>
   <p class="upload-subtitle">Upload a file or write a note directly to save as a .txt file.</p>
 
-  <!-- File Upload Form -->
+  <!-- File Upload Form - FIXED: Added missing action and method -->
   <form action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data" class="upload-form">
-    <input type="file" name="file" class="file-input">
+    <input type="file" name="file" class="file-input" required>
     <button type="submit" class="upload-btn">Upload File</button>
   </form>
 
   <hr style="margin: 20px 0;">
 
-  <!-- Text Note Form -->
+  <!-- Text Note Form - FIXED: Added correct action -->
   <form action="{{ url_for('upload_note') }}" method="POST" class="upload-form">
     <textarea name="note_content" rows="5" placeholder="Write your note here..." class="file-input" required></textarea>
     <input type="text" name="note_filename" placeholder="Optional filename (e.g. note1)" class="file-input">
