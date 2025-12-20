@@ -1,0 +1,88 @@
+<?php
+class Login {
+    private $error;
+
+    public function __construct($error = '') {
+        $this->error = $error;
+    }
+
+    public function render() {
+        echo <<<HTML
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+ <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #e6f0ff, #ffffff);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .login-container {
+      background: white;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+      width: 400px;
+    }
+    h2 { text-align: center; color: #004aad; }
+    label { display: inline-block; width: 100px; color: #004aad; margin-top: 10px; }
+    input {
+      width: calc(100% - 110px);
+      padding: 8px;
+      margin-top: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      background-color: #004aad;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover { background-color: #0066ff; }
+    p { text-align: center; margin-top: 15px; }
+    a { color: #004aad; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+
+<body>
+
+  <div class="login-container">
+    <h2>Login</h2>
+
+    <form action="login.php" method="post">
+      <label>Username:</label>
+      <input type="text" name="username" required><br>
+
+      <label>Password:</label>
+      <input type="password" name="password" required><br>
+
+      <button type="submit">Login</button>
+    </form>
+
+    <p>Don't have an account? <a href="signup.php">Sign Up</a></p>
+HTML;
+        if ($this->error) {
+            echo "<p style=\"color:red; text-align:center;\">{$this->error}</p>";
+        }
+        echo <<<HTML
+  </div>
+
+</body>
+</html>
+HTML;
+    }
+}
+?>

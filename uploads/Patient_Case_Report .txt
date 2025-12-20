@@ -1,0 +1,31 @@
+Patient Case Report:
+
+A 56-year-old male patient presented to the outpatient department with persistent fatigue, unexplained weight loss (approximately 7 kg over the past three months), and intermittent episodes of night sweats. The patient also reported shortness of breath upon exertion and swelling in the lower extremities. Physical examination revealed mild hepatosplenomegaly and pallor of the conjunctiva.
+
+Laboratory investigations showed a markedly elevated white blood cell count (WBC = 110,000/µL), decreased hemoglobin (Hb = 8.2 g/dL), and thrombocytopenia (platelet count = 80,000/µL). Peripheral blood smear demonstrated the presence of numerous immature myeloid cells. Bone marrow biopsy confirmed hypercellularity with myeloid proliferation and the presence of the Philadelphia chromosome (BCR-ABL fusion gene).
+
+Diagnosis: Chronic Myeloid Leukemia (CML).
+
+Definition: Chronic Myeloid Leukemia is a clonal myeloproliferative disorder characterized by uncontrolled proliferation of myeloid cells in the bone marrow and accumulation of these cells in the blood. It is associated with a specific genetic abnormality — the Philadelphia chromosome, resulting from a translocation between chromosomes 9 and 22, leading to the formation of the BCR-ABL oncogene.
+
+Pathophysiology: The BCR-ABL fusion gene encodes a constitutively active tyrosine kinase that promotes cell division and inhibits apoptosis, resulting in the expansion of leukemic cells.
+
+Common Symptoms:
+
+Fatigue and weakness
+
+Weight loss
+
+Night sweats
+
+Splenomegaly (enlarged spleen)
+
+Bone pain
+
+Recurrent infections due to reduced normal white blood cells
+
+Treatment:
+First-line therapy involves tyrosine kinase inhibitors (TKIs) such as Imatinib, which specifically target the BCR-ABL protein and suppress leukemic proliferation. In resistant cases, newer-generation TKIs (Dasatinib, Nilotinib) or bone marrow transplantation may be considered.
+
+Prognosis:
+With appropriate TKI therapy, patients can achieve long-term remission, and the 10-year survival rate has significantly improved to over 80%.
