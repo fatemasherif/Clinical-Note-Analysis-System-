@@ -1,135 +1,67 @@
 <?php
-class Feedback {
-    public function render() {
-        echo <<<HTML
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Google-Style Star Rating</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #f7faff;
-      margin: 0;
-    }
-    .navbar {
-      background-color: #004aad;
-      color: white;
-      padding: 15px 30px;
-      display: flex;
-      justify-content: space-between;
-    }
-    .navbar a {
-      color: white;
-      text-decoration: none;
-      margin-left: 20px;
-    }
-    .container {
-      max-width: 600px;
-      margin: 40px auto;
-      background: #fff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-    h2 {
-      color: #004aad;
-      margin-bottom: 25px;
-    }
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: 500;
-      color: #333;
-    }
-    textarea {
-      width: 100%;
-      height: 100px;
-      padding: 10px;
-      margin-top: 8px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 14px;
-      resize: vertical;
-    }
-    button {
-      margin-top: 20px;
-      background-color: #0077cc;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #005ea6;
+require_once __DIR__ . '/BaseTemplate.php';
+
+class Feedback extends BaseTemplate {
+    private $message;
+
+    public function __construct($message = '') {
+        $this->message = $message;
+        $content = $this->buildContent();
+        parent::__construct('Feedback', $content);
     }
 
-    /* Google-style star rating */
-    .star-rating {
-      display: flex;
-      gap: 8px;
-      font-size: 2.5rem;
-      color: #ccc;
-      cursor: pointer;
-    }
-    .star-rating .star {
-      transition: color 0.2s;
-    }
-    .star-rating .star.selected,
-    .star-rating .star:hover,
-    .star-rating .star:hover ~ .star {
-      color: #ffb400;
-    }
-  </style>
-</head>
-<body>
-  <div class="navbar">
-    <div><strong>Feedback</strong></div>
-    <div>
-      <a href="/user_dashboard.php">Dashboard</a>
-      <a href="/logout.php">Logout</a>
+    private function buildContent() {
+        $messageHtml = '';
+        if ($this->message) {
+            $messageClass = strpos($this->message, 'success') !== false ? 'success' : 'info';
+            $messageHtml = '<div class="message ' . $messageClass . '" style="padding: 15px; margin-bottom: 20px; background: #d4edda; color: #155724; border-radius: 8px;">' . htmlspecialchars($this->message, ENT_QUOTES, 'UTF-8') . '</div>';
+        }
+
+        return <<<HTML
+<div style="max-width: 600px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+  <h2 style="color: #004aad; margin-bottom: 25px;">Share Your Feedback</h2>
+  
+  {$messageHtml}
+  
+  <form method="POST" action="feedback.php">
+    <label for="rating" style="display: block; margin-top: 15px; font-weight: 500; color: #333;">Rate the System:</label>
+    <div class="star-rating" id="starRating" style="display: flex; gap: 8px; font-size: 2.5rem; color: #ccc; cursor: pointer; margin: 10px 0;">
+      <span class="star" data-value="1" style="transition: color 0.2s;">&#9733;</span>
+      <span class="star" data-value="2" style="transition: color 0.2s;">&#9733;</span>
+      <span class="star" data-value="3" style="transition: color 0.2s;">&#9733;</span>
+      <span class="star" data-value="4" style="transition: color 0.2s;">&#9733;</span>
+      <span class="star" data-value="5" style="transition: color 0.2s;">&#9733;</span>
     </div>
-  </div>
+    <input type="hidden" name="rating" id="ratingValue" required />
 
-  <div class="container">
-    <h2>Share Your Feedback</h2>
+    <label for="comments" style="display: block; margin-top: 15px; font-weight: 500; color: #333;">Your Comments:</label>
+    <textarea name="comments" id="comments" placeholder="Tell us what you think..." required style="width: 100%; height: 100px; padding: 10px; margin-top: 8px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px; resize: vertical; box-sizing: border-box;"></textarea>
 
-    <form method="POST" action="/feedback.php">
-      <label for="rating">Rate the System:</label>
-      <div class="star-rating" id="starRating">
-        <span class="star" data-value="1">&#9733;</span>
-        <span class="star" data-value="2">&#9733;</span>
-        <span class="star" data-value="3">&#9733;</span>
-        <span class="star" data-value="4">&#9733;</span>
-        <span class="star" data-value="5">&#9733;</span>
-      </div>
-      <input type="hidden" name="rating" id="ratingValue" required />
+    <button type="submit" style="margin-top: 20px; background-color: #0077cc; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer;">Submit Feedback</button>
+  </form>
+</div>
 
-      <label for="comments">Your Comments:</label>
-      <textarea name="comments" id="comments" placeholder="Tell us what you think..." required></textarea>
+<style>
+  .star-rating .star.selected,
+  .star-rating .star:hover,
+  .star-rating .star:hover ~ .star {
+    color: #ffb400;
+  }
+</style>
 
-      <button type="submit">Submit Feedback</button>
-    </form>
-  </div>
+<script>
+  const stars = document.querySelectorAll('.star-rating .star');
+  const ratingInput = document.getElementById('ratingValue');
 
-  <script>
-    const stars = document.querySelectorAll('.star-rating .star');
-    const ratingInput = document.getElementById('ratingValue');
-
-    stars.forEach((star, index) => {
-      star.addEventListener('click', () => {
-        ratingInput.value = star.dataset.value;
-        stars.forEach((s, i) => {
-          s.classList.toggle('selected', i < index + 1);
-        });
+  stars.forEach((star, index) => {
+    star.addEventListener('click', () => {
+      ratingInput.value = star.dataset.value;
+      stars.forEach((s, i) => {
+        s.classList.toggle('selected', i < index + 1);
       });
     });
-  </script>
-</body>
-</html>
+  });
+</script>
 HTML;
     }
 }

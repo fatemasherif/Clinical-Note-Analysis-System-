@@ -4,7 +4,7 @@ require_once __DIR__ . '/../PHP_Templates/Forum.php';
 
 class ForumController extends BaseController {
     public function forum() {
-        session_start();
+        $this->startSession();
         $message = '';
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -20,6 +20,9 @@ class ForumController extends BaseController {
     }
 }
 ?>
+
+
+
 
 
 

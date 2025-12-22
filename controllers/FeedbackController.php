@@ -8,11 +8,19 @@ class FeedbackController extends BaseController {
         $message = '';
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // In original, it might save to db, but for now, just show message
-            $message = 'Feedback submitted successfully';
+            $rating = $_POST['rating'] ?? '';
+            $comments = $_POST['comments'] ?? '';
+            
+            if ($rating && $comments) {
+                // TODO: Save feedback to database if needed
+                // For now, just show success message
+                $message = 'Feedback submitted successfully! Thank you for your input.';
+            } else {
+                $message = 'Please fill in all fields.';
+            }
         }
 
-        $feedback = new Feedback();
+        $feedback = new Feedback($message);
         $feedback->render();
     }
 }

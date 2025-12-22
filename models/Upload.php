@@ -78,6 +78,72 @@ class UploadModel {
         }
         return $upload['uploader'] == $currentUsername || $currentUserRole == 'admin';
     }
+
+    /**
+     * Sync files from filesystem to database
+     * Adds files that exist on disk but not in database
+     */
+    public function syncFilesFromFilesystem() {
+        $synced = 0;
+        $baseDir = dirname(__DIR__);
+        
+        // Sync doctors folder
+        $doctorsDir = $baseDir . '/uploads/doctors';
+        if (is_dir($doctorsDir)) {
+            $files = scandir($doctorsDir);
+            foreach ($files as $file) {
+                if ($file != '.' && $file != '..' && is_file($doctorsDir . '/' . $file)) {
+                    $existing = $this->findByFilename($file, 'doctor');
+                    if (!$existing) {
+                        // Try to extract uploader from filename or use 'system'
+                        $uploader = 'system';
+                        if ($this->create($file, $uploader, 'doctor')) {
+                            $synced++;
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Sync nurses folder
+        $nursesDir = $baseDir . '/uploads/nurses';
+        if (is_dir($nursesDir)) {
+            $files = scandir($nursesDir);
+            foreach ($files as $file) {
+                if ($file != '.' && $file != '..' && is_file($nursesDir . '/' . $file)) {
+                    $existing = $this->findByFilename($file, 'nurse');
+                    if (!$existing) {
+                        $uploader = 'system';
+                        if ($this->create($file, $uploader, 'nurse')) {
+                            $synced++;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return $synced;
+    }
+
+    /**
+     * Verify file exists in database and on disk
+     */
+    public function verifyFile($filename, $role) {
+        $upload = $this->findByFilename($filename, $role);
+        if (!$upload) {
+            return ['exists_in_db' => false, 'exists_on_disk' => false];
+        }
+        
+        $baseDir = dirname(__DIR__);
+        $file_path = $baseDir . '/uploads/' . $role . 's/' . $filename;
+        $exists_on_disk = file_exists($file_path) || file_exists('uploads/' . $role . 's/' . $filename);
+        
+        return [
+            'exists_in_db' => true,
+            'exists_on_disk' => $exists_on_disk,
+            'upload' => $upload
+        ];
+    }
 }
 ?>
 

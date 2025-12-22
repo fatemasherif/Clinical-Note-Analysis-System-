@@ -13,27 +13,33 @@ class AuthController extends BaseController {
     }
 
     public function login() {
-        session_start();
+        $this->startSession();
         $error = '';
+        require_once __DIR__ . '/../models/Validation.php';
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $username = $_POST['username'] ?? '';
+            $username = Validation::sanitizeInput($_POST['username'] ?? '');
             $password = $_POST['password'] ?? '';
 
-            $user = $this->userModel->authenticate($username, $password);
-
-            if ($user) {
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['username'] = $user['username'];
-                $_SESSION['role'] = $user['role'];
-                if ($user['role'] == 'admin') {
-                    header('Location: admin_dashboard.php');
-                } else {
-                    header('Location: doctor_dashboard.php');
-                }
-                exit;
+            // Basic validation
+            if (empty($username) || empty($password)) {
+                $error = 'Username and password are required';
             } else {
-                $error = 'Invalid username or password';
+                $user = $this->userModel->authenticate($username, $password);
+
+                if ($user) {
+                    $_SESSION['user_id'] = $user['id'];
+                    $_SESSION['username'] = htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8');
+                    $_SESSION['role'] = htmlspecialchars($user['role'], ENT_QUOTES, 'UTF-8');
+                    if ($user['role'] == 'admin') {
+                        header('Location: admin_dashboard.php');
+                    } else {
+                        header('Location: doctor_dashboard.php');
+                    }
+                    exit;
+                } else {
+                    $error = 'Invalid username or password';
+                }
             }
         }
 
@@ -42,31 +48,44 @@ class AuthController extends BaseController {
     }
 
     public function signup() {
-        session_start();
+        $this->startSession();
         $error = '';
+        require_once __DIR__ . '/../models/Validation.php';
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $username = $_POST['username'] ?? '';
+            $username = Validation::sanitizeInput($_POST['username'] ?? '');
             $password = $_POST['password'] ?? '';
-            $role = $_POST['role'] ?? '';
+            $role = Validation::sanitizeInput($_POST['role'] ?? '');
 
-            if ($username && $password && $role) {
-                try {
-                    if ($this->userModel->usernameExists($username)) {
-                        $error = 'Username already exists';
+            // Validate inputs
+            $usernameValidation = Validation::validateUsername($username);
+            if (!$usernameValidation['valid']) {
+                $error = $usernameValidation['error'];
+            } else {
+                $passwordValidation = Validation::validatePassword($password);
+                if (!$passwordValidation['valid']) {
+                    $error = $passwordValidation['error'];
+                } else {
+                    $roleValidation = Validation::validateRole($role);
+                    if (!$roleValidation['valid']) {
+                        $error = $roleValidation['error'];
                     } else {
-                        if ($this->userModel->create($username, $password, $role)) {
-                            header('Location: login.php');
-                            exit;
-                        } else {
-                            $error = 'Error creating account';
+                        try {
+                            if ($this->userModel->usernameExists($username)) {
+                                $error = 'Username already exists';
+                            } else {
+                                if ($this->userModel->create($username, $password, $role)) {
+                                    header('Location: login.php');
+                                    exit;
+                                } else {
+                                    $error = 'Error creating account';
+                                }
+                            }
+                        } catch (PDOException $e) {
+                            $error = 'Username already exists or error occurred';
                         }
                     }
-                } catch (PDOException $e) {
-                    $error = 'Username already exists or error occurred';
                 }
-            } else {
-                $error = 'All fields are required';
             }
         }
 
@@ -75,7 +94,7 @@ class AuthController extends BaseController {
     }
 
     public function logout() {
-        session_start();
+        $this->startSession();
         session_destroy();
         header('Location: index.php');
         exit;

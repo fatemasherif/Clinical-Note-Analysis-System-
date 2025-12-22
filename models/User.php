@@ -38,8 +38,14 @@ class User {
      * Get all users with email (if exists)
      */
     public function getAllWithEmail() {
-        $stmt = $this->db->query("SELECT id, username, role, email FROM users");
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // Check if email column exists, if not use getAll()
+        try {
+            $stmt = $this->db->query("SELECT id, username, role, email FROM users");
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            // If email column doesn't exist, fall back to getAll()
+            return $this->getAll();
+        }
     }
 
     /**

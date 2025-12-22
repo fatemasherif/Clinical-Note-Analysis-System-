@@ -271,7 +271,8 @@ class AdminDashboard {
 HTML;
         $limitedUsers = array_slice($this->users, 0, 3);
         foreach ($limitedUsers as $user) {
-            echo "<tr><td>{$user['id']}</td><td>{$user['username']}</td><td>{$user['role']}</td><td>{$user['email']}</td><td><button class=\"delete-btn\">Delete</button></td></tr>";
+            $email = $user['email'] ?? 'N/A';
+            echo "<tr><td>{$user['id']}</td><td>{$user['username']}</td><td>{$user['role']}</td><td>{$email}</td><td><button class=\"delete-btn\">Delete</button></td></tr>";
         }
         echo <<<HTML
         </tbody>

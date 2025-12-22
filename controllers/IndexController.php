@@ -43,7 +43,7 @@ class IndexController extends BaseController {
     }
 
     public function index() {
-        session_start();
+        $this->startSession();
         $home = new Homepage();
         $home->render();
     }

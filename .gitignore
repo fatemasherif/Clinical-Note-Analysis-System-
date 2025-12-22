@@ -1,0 +1,10 @@
+# Database
+database.db
+
+# Uploads / runtime files
+uploads/
+uploads/**
+
+# OS / temp
+*.log
+*.tmp

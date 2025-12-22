@@ -1,83 +1,23 @@
 <?php
-class AdminNotes {
-    public function render() {
-        echo <<<HTML
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manage Notes | CNAS Admin</title>
+require_once __DIR__ . '/BaseTemplate.php';
+
+class AdminNotes extends BaseTemplate {
+    private $notes;
+
+    public function __construct($notes = []) {
+        $this->notes = $notes;
+        $content = $this->buildContent();
+        parent::__construct('Manage Clinical Notes', $content);
+    }
+
+    private function buildContent() {
+        $notesJson = htmlspecialchars(json_encode($this->notes), ENT_QUOTES, 'UTF-8');
+        
+        return <<<HTML
+<div style="max-width: 1400px; margin: 0 auto; padding: 20px;">
+  <h2 style="font-size: 1.875rem; color: #1e3a8a; font-weight: bold; margin-bottom: 24px;">Manage Clinical Notes</h2>
+
   <style>
-   body {
-      background-color: #f3f4f6;
-      font-family: system-ui, -apple-system, sans-serif;
-      margin: 0;
-      color: #1f2937;
-    }
-
-    h1, h2, h3 {
-      margin: 0;
-    }
-
-    /* Navbar */
-    nav {
-      background-color: #fff;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 32px;
-    }
-
-    nav h1 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #1d4ed8;
-    }
-
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 24px;
-      margin: 0;
-      padding: 0;
-      color: #374151;
-    }
-
-    nav ul a {
-      text-decoration: none;
-      color: inherit;
-      transition: 0.2s;
-    }
-
-    nav ul a:hover {
-      color: #2563eb;
-    }
-
-    nav ul a.text-blue-700 {
-      font-weight: 600;
-      color: #1d4ed8;
-      border-bottom: 2px solid #2563eb;
-      padding-bottom: 4px;
-    }
-
-    nav ul a.hover\:text-red-600:hover {
-      color: #dc2626;
-    }
-
-    /* Main */
-    main {
-      padding: 40px;
-    }
-
-    main h2 {
-      font-size: 1.875rem;
-      color: #1e3a8a;
-      font-weight: bold;
-      margin-bottom: 24px;
-    }
-
     /* Search box */
     .filter-box {
       background-color: #fff;
@@ -201,83 +141,63 @@ class AdminNotes {
       }
     }
   </style>
-</head>
 
-<body>
+  <!-- Search -->
+  <div class="filter-box">
+    <input id="searchInput" type="text" placeholder="Search by Doctor or Diagnosis...">
+    <select id="filterSelect">
+      <option value="">All Status</option>
+      <option value="pending">Pending</option>
+      <option value="approved">Approved</option>
+      <option value="rejected">Rejected</option>
+    </select>
+  </div>
 
-  <!-- Navbar -->
-  <nav>
-    <h1>CNAS Admin Dashboard</h1>
-    <ul>
-      <li><a href="admin_dashboard.php">Dashboard</a></li>
-      <li><a href="admin_users.php">Manage Users</a></li>
-      <li><a href="admin_notes.php" class="text-blue-700">Clinical Notes</a></li>
-      <li><a href="logout.php" class="hover:text-red-600">Logout</a></li>
-    </ul>
-  </nav>
-
-  <!-- Main -->
-  <main>
-    <h2>Manage Clinical Notes</h2>
-
-    <!-- Search -->
-    <div class="filter-box">
-      <input id="searchInput" type="text" placeholder="Search by Doctor or Diagnosis...">
-      <select id="filterSelect">
-        <option value="">All Status</option>
-        <option value="pending">Pending</option>
-        <option value="approved">Approved</option>
-        <option value="rejected">Rejected</option>
-      </select>
-    </div>
-
-    <!-- Table -->
-    <section>
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Doctor</th>
-            <th>Diagnosis</th>
-            <th>Summary</th>
-            <th>Date</th>
-            <th>Status</th>
-            <th style="text-align: center;">Actions</th>
-          </tr>
-        </thead>
-        <tbody id="notesTable"></tbody>
-      </table>
-    </section>
-  </main>
+  <!-- Table -->
+  <section>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Doctor</th>
+          <th>Diagnosis</th>
+          <th>Summary</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th style="text-align: center;">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="notesTable"></tbody>
+    </table>
+  </section>
 
   <!-- JavaScript -->
   <script>
-    const notes = [
-      { id: 1, doctor: "Dr. Smith", diagnosis: "Hypertension", summary: "Patient prescribed Amlodipine.", date: "2025-10-08", status: "approved" },
-      { id: 2, doctor: "Dr. Ahmed", diagnosis: "Diabetes", summary: "Metformin 500mg daily.", date: "2025-10-07", status: "pending" },
-      { id: 3, doctor: "Dr. Lee", diagnosis: "Asthma", summary: "Inhaler twice daily.", date: "2025-10-06", status: "rejected" }
-    ];
+    const notes = {$notesJson};
 
     function renderTable(data) {
       const tableBody = document.getElementById("notesTable");
       tableBody.innerHTML = "";
 
-      data.forEach(note => {
-        const row = \`
-          <tr>
-            <td>\${note.id}</td>
-            <td>\${note.doctor}</td>
-            <td>\${note.diagnosis}</td>
-            <td>\${note.summary}</td>
-            <td>\${note.date}</td>
-            <td class="status-\${note.status}">\${note.status}</td>
-            <td style="text-align: center;">
-              <button class="btn-approve" onclick="updateStatus(\${note.id}, 'approved')">Approve</button>
-              <button class="btn-reject" onclick="updateStatus(\${note.id}, 'rejected')">Reject</button>
-              <button class="btn-delete" onclick="deleteNote(\${note.id})">Delete</button>
-            </td>
-          </tr>
-        \`;
+      if (data.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px; color: #6b7280;">No clinical notes found.</td></tr>';
+        return;
+      }
+
+      data.forEach(function(note) {
+        const row = '<tr>' +
+          '<td>' + note.id + '</td>' +
+          '<td>' + note.doctor + '</td>' +
+          '<td>' + note.diagnosis + '</td>' +
+          '<td>' + note.summary + '</td>' +
+          '<td>' + note.date + '</td>' +
+          '<td class="status-' + note.status + '">' + note.status + '</td>' +
+          '<td style="text-align: center;">' +
+          '<button class="btn-approve" onclick="updateStatus(' + note.id + ', \'approved\')">Approve</button>' +
+          '<button class="btn-reject" onclick="updateStatus(' + note.id + ', \'rejected\')">Reject</button>' +
+          '<button class="btn-delete" onclick="deleteNote(' + note.id + ')">Delete</button>' +
+          '</td>' +
+          '</tr>';
         tableBody.innerHTML += row;
       });
     }
@@ -289,10 +209,12 @@ class AdminNotes {
     }
 
     function deleteNote(id) {
-      const index = notes.findIndex(n => n.id === id);
-      if (index !== -1) {
-        notes.splice(index, 1);
-        renderTable(notes);
+      if (confirm('Are you sure you want to delete this note?')) {
+        const index = notes.findIndex(n => n.id === id);
+        if (index !== -1) {
+          notes.splice(index, 1);
+          renderTable(notes);
+        }
       }
     }
 
@@ -310,10 +232,10 @@ class AdminNotes {
       renderTable(filtered);
     });
 
+    // Initial render
     renderTable(notes);
   </script>
-</body>
-</html>
+</div>
 HTML;
     }
 }

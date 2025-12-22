@@ -15,17 +15,20 @@ class SettingsController extends BaseController {
         $this->requireAuth();
         $user = $this->getCurrentUser();
         $messages = [];
+        require_once __DIR__ . '/../models/Validation.php';
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $new_password = $_POST['new_password'] ?? '';
-            if ($new_password) {
+            $passwordValidation = Validation::validatePassword($new_password);
+            
+            if (!$passwordValidation['valid']) {
+                $messages[] = ['error', $passwordValidation['error']];
+            } else {
                 if ($this->userModel->updatePassword($user['id'], $new_password)) {
                     $messages[] = ['success', 'Password updated successfully'];
                 } else {
                     $messages[] = ['error', 'Error updating password'];
                 }
-            } else {
-                $messages[] = ['error', 'Password cannot be empty'];
             }
         }
 

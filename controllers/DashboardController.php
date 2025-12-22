@@ -16,7 +16,8 @@ class DashboardController extends BaseController {
         $this->requireAuth('admin');
         $user = $this->getCurrentUser();
 
-        $users = $this->userModel->getAllWithEmail();
+        // Use getAll() since email column doesn't exist in current schema
+        $users = $this->userModel->getAll();
 
         $dashboard = new AdminDashboard($user['username'], $users);
         $dashboard->render();

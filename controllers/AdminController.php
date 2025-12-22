@@ -16,14 +16,36 @@ class AdminController extends BaseController {
         $this->requireAuth('admin');
         $message = '';
 
+        require_once __DIR__ . '/../models/Validation.php';
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $data = json_decode(file_get_contents('php://input'), true);
             if (isset($data['add'])) {
-                $username = $data['username'];
-                $password = $data['password'];
-                $role = $data['role'];
+                $username = Validation::sanitizeInput($data['username'] ?? '');
+                $password = $data['password'] ?? '';
+                $role = Validation::sanitizeInput($data['role'] ?? '');
+                
+                // Validate inputs
+                $usernameValidation = Validation::validateUsername($username);
+                if (!$usernameValidation['valid']) {
+                    echo json_encode(['error' => $usernameValidation['error']]);
+                    exit;
+                }
+                $passwordValidation = Validation::validatePassword($password);
+                if (!$passwordValidation['valid']) {
+                    echo json_encode(['error' => $passwordValidation['error']]);
+                    exit;
+                }
+                $roleValidation = Validation::validateRole($role);
+                if (!$roleValidation['valid']) {
+                    echo json_encode(['error' => $roleValidation['error']]);
+                    exit;
+                }
+                
                 try {
-                    if ($this->userModel->create($username, $password, $role)) {
+                    if ($this->userModel->usernameExists($username)) {
+                        echo json_encode(['error' => 'Username already exists']);
+                    } elseif ($this->userModel->create($username, $password, $role)) {
                         echo json_encode(['message' => 'User added']);
                     } else {
                         echo json_encode(['error' => 'Error adding user']);
@@ -33,9 +55,22 @@ class AdminController extends BaseController {
                 }
                 exit;
             } elseif (isset($data['edit'])) {
-                $id = $data['id'];
-                $username = $data['username'];
-                $role = $data['role'];
+                $id = intval($data['id'] ?? 0);
+                $username = Validation::sanitizeInput($data['username'] ?? '');
+                $role = Validation::sanitizeInput($data['role'] ?? '');
+                
+                // Validate inputs
+                $usernameValidation = Validation::validateUsername($username);
+                if (!$usernameValidation['valid']) {
+                    echo json_encode(['error' => $usernameValidation['error']]);
+                    exit;
+                }
+                $roleValidation = Validation::validateRole($role);
+                if (!$roleValidation['valid']) {
+                    echo json_encode(['error' => $roleValidation['error']]);
+                    exit;
+                }
+                
                 if ($this->userModel->update($id, $username, $role)) {
                     echo json_encode(['message' => 'User updated']);
                 } else {
@@ -43,8 +78,8 @@ class AdminController extends BaseController {
                 }
                 exit;
             } elseif (isset($data['delete'])) {
-                $id = $data['id'];
-                if ($this->userModel->delete($id)) {
+                $id = intval($data['id'] ?? 0);
+                if ($id > 0 && $this->userModel->delete($id)) {
                     echo json_encode(['message' => 'User deleted']);
                 } else {
                     echo json_encode(['error' => 'Error deleting user']);

@@ -8,8 +8,14 @@ class BaseController {
         $this->db = Database::getInstance()->getConnection();
     }
 
+    protected function startSession() {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+    }
+
     protected function requireAuth($role = null) {
-        session_start();
+        $this->startSession();
         if (!isset($_SESSION['user_id'])) {
             header('Location: login.php');
             exit;
@@ -21,7 +27,7 @@ class BaseController {
     }
 
     protected function getCurrentUser() {
-        session_start();
+        $this->startSession();
         return [
             'id' => $_SESSION['user_id'] ?? null,
             'username' => $_SESSION['username'] ?? null,
@@ -30,6 +36,9 @@ class BaseController {
     }
 }
 ?>
+
+
+
 
 
 
