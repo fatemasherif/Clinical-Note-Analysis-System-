@@ -22,3 +22,5 @@ class ForumController extends BaseController {
 ?>
 
 
+
+
