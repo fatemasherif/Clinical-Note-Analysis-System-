@@ -8,7 +8,7 @@ class DoctorDashboard extends BaseTemplate {
     public function __construct($username = '', $role = '') {
         $this->username = $username;
         $this->role = $role;
-        $title = 'Doctor Dashboard';
+        $title = 'Dashboard';
         $content = '<div class="doctor-dashboard">
 
   <h2 class="dashboard-title">
@@ -54,6 +54,22 @@ class DoctorDashboard extends BaseTemplate {
       <div class="card-content">
         <h3>Settings</h3>
         <p>Manage your account preferences.</p>
+      </div>
+    </a>
+
+    <a href="feedback.php" class="dashboard-card">
+      <div class="icon">💬</div>
+      <div class="card-content">
+        <h3>Feedback</h3>
+        <p>Share your thoughts and rate the system.</p>
+      </div>
+    </a>
+
+    <a href="forum.php" class="dashboard-card">
+      <div class="icon">👥</div>
+      <div class="card-content">
+        <h3>Discussion Forum</h3>
+        <p>Connect with other healthcare professionals.</p>
       </div>
     </a>
   </div>

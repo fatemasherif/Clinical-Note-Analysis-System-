@@ -352,3 +352,89 @@ body {
 .analyze-btn:hover {
     background-color: #0069d9;
 }
+
+/* Dashboard Sections */
+.dashboard-section {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-top: 2rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.dashboard-section h3 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.inline-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.inline-form label {
+  font-weight: 500;
+  color: #333;
+}
+
+.inline-form textarea {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  resize: vertical;
+  min-height: 80px;
+}
+
+.inline-form button {
+  background-color: #0077ff;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.inline-form button:hover {
+  background-color: #005ecc;
+}
+
+.forum-posts {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+}
+
+.forum-post {
+  background-color: #f8f9fa;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  border-radius: 6px;
+  border-left: 4px solid #004aad;
+}
+
+.forum-post strong {
+  color: #004aad;
+}
+
+.forum-post small {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+/* Star Rating */
+.star-rating {
+  display: flex;
+  gap: 8px;
+  font-size: 1.5rem;
+  color: #ccc;
+  cursor: pointer;
+  margin: 0.5rem 0;
+}
+
+.star-rating .star.selected,
+.star-rating .star:hover,
+.star-rating .star:hover ~ .star {
+  color: #ffb400;
+}

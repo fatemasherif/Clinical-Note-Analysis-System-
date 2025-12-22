@@ -2,13 +2,19 @@
 class AdminDashboard {
     private $username;
     private $users;
+    private $feedbacks;
+    private $forumPosts;
 
-    public function __construct($username, $users = []) {
+    public function __construct($username, $users = [], $feedbacks = []) {
         $this->username = $username;
         $this->users = $users;
+        $this->feedbacks = $feedbacks;
     }
 
     public function render() {
+        $totalUsers = $this->users ? count($this->users) : 0;
+        $totalFeedback = $this->feedbacks ? count($this->feedbacks) : 0;
+
         echo <<<HTML
 <!DOCTYPE html>
 <html lang="en">
@@ -226,6 +232,7 @@ class AdminDashboard {
       <li><a href="admin_dashboard.php" class="text-blue-700">Dashboard</a></li>
       <li><a href="admin_users.php">Manage Users</a></li>
       <li><a href="admin_notes.php">Clinical Notes</a></li>
+      <li><a href="admin_forum.php">Forums</a></li>
       <li><a href="logout.php" class="hover:text-red-600">Logout</a></li>
     </ul>
   </nav>
@@ -281,19 +288,27 @@ HTML;
 
     <!-- Feedback -->
     <section class="feedback">
-      <h3>Recent Feedback</h3>
+      <h3>All Feedback</h3>
       <ul>
-        <li>"The NLP analysis was accurate for patient diagnosis." — <b>Dr. Lina</b></li>
-        <li>"Need better summarization for long notes." — <b>Dr. Omar</b></li>
+HTML;
+        if (!empty($this->feedbacks)) {
+            foreach ($this->feedbacks as $feedback) {
+                $stars = str_repeat('★', $feedback['rating']) . str_repeat('☆', 5 - $feedback['rating']);
+                echo "<li>{$stars} \"{$feedback['comments']}\" — <b>{$feedback['username']} ({$feedback['role']})</b> - {$feedback['created_at']}</li>";
+            }
+        } else {
+            echo "<li>No feedback yet.</li>";
+        }
+        echo <<<HTML
       </ul>
     </section>
   </main>
 
   <!-- Dummy data-->
   <script>
-    document.getElementById("totalUsers").textContent = 5;
-    document.getElementById("totalNotes").textContent = 12;
-    document.getElementById("totalFeedback").textContent = 2;
+    document.getElementById("totalUsers").textContent = {$totalUsers};
+    document.getElementById("totalNotes").textContent = 12; // TODO: get from DB
+    document.getElementById("totalFeedback").textContent = {$totalFeedback};
   </script>
 
 </body>

@@ -1,6 +1,31 @@
 <?php
 class Forum {
+    private $posts;
+    private $message;
+
+    public function __construct($posts = [], $message = '') {
+        $this->posts = $posts;
+        $this->message = $message;
+    }
+
     public function render() {
+        $postsHtml = '';
+        if (!empty($this->posts)) {
+            foreach ($this->posts as $post) {
+                $role = ucfirst($post['role']);
+                $postsHtml .= <<<HTML
+        <div class="discussion-box">
+            <strong>{$post['username']} ({$role})</strong> - {$post['created_at']}<br>
+            {$post['content']}
+        </div>
+HTML;
+            }
+        } else {
+            $postsHtml = '<p>No posts yet. Be the first to start a discussion!</p>';
+        }
+
+        $messageHtml = $this->message ? "<p style='color: green;'>{$this->message}</p>" : '';
+
         echo <<<HTML
 <!DOCTYPE html>
 <html lang="en">
@@ -121,9 +146,8 @@ class Forum {
 
     <div class="container">
         <h2>Discussion Forum</h2>
-
-            <p>No posts yet. Be the first to start a discussion!</p>
-
+        {$messageHtml}
+        {$postsHtml}
 
         <form method="POST" action="/forum.php">
             <label for="content"><strong>New Post:</strong></label>
